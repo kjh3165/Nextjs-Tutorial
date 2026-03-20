@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function PostList() {
@@ -15,7 +16,9 @@ export default function PostList() {
     <ul>
       {posts.map((post) => (
         <li key={post.id}>
-          {post.id} / {post.title}
+          <Link href={`/posts/${post.id}`}>
+            {post.id} / {post.title}
+          </Link>
         </li>
       ))}
     </ul>
