@@ -1,5 +1,6 @@
 'use client'
 
+import { supabase } from '@/supabase/supabase'
 import { useState } from 'react'
 
 export default function SignIn() {
@@ -8,7 +9,15 @@ export default function SignIn() {
 
   const handleOnSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(email, password)
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    if (error) {
+      alert(error.message)
+    } else {
+      alert('로그인 성공!')
+    }
   }
 
   return (
