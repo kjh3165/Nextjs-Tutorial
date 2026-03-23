@@ -1,11 +1,12 @@
 'use client'
 
 import { supabase } from '@/supabase/supabase'
+import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function Nav() {
-  const [user, setUser] = useState()
+  const [user, setUser] = useState<User | null>(null)
 
   const fetchUser = async () => {
     const {
@@ -16,6 +17,13 @@ export default function Nav() {
 
   useEffect(() => {
     fetchUser()
+
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+    })
+    // 클린업 함수 > 컴포넌트가 언마운트 되거나 useEffect가 재실행되기 전
+    // 이벤트 리스너 중복 호출 방지
+    return () => data.subscription.unsubscribe()
   }, [])
 
   const handleOnLogout = async () => {
