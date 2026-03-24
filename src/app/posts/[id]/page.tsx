@@ -52,9 +52,15 @@ export default function PostDetail() {
   }
 
   const handleOnDeletePost = async (id: number) => {
-    const { error } = await supabase.from('posts').delete().eq('id', id)
+    const { data, error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', id)
+      .select()
     if (error) {
       alert(error.message)
+    } else if (!data || data.length === 0) {
+      alert('권한이 없습니다.')
     } else {
       alert('삭제 성공!')
       router.push('/posts')
@@ -63,12 +69,14 @@ export default function PostDetail() {
 
   const handleOnSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('comments')
       .insert([{ post_id: id, content: comment }])
       .select()
     if (error) {
       alert(error.message)
+    } else if (!data || data.length === 0) {
+      alert('권한이 없습니다.')
     } else {
       alert('댓글 작성 성공!')
       setComment('')
@@ -77,9 +85,15 @@ export default function PostDetail() {
   }
 
   const handleOnDeleteComment = async (id: number) => {
-    const { error } = await supabase.from('comments').delete().eq('id', id)
+    const { data, error } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', id)
+      .select()
     if (error) {
       alert(error.message)
+    } else if (!data || data.length === 0) {
+      alert('권한이 없습니다.')
     } else {
       alert('댓글 삭제 성공!')
       fetchComments()
