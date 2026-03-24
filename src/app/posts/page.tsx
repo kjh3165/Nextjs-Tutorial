@@ -32,6 +32,7 @@ export default function Posts() {
           </Link>
         </li>
       ))}
+      <Link href="/posts/new">글쓰기</Link>
     </ul>
   )
 }
