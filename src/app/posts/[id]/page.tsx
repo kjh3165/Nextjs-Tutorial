@@ -51,7 +51,7 @@ export default function PostDetail() {
     return <div> loading... </div>
   }
 
-  const handleOnDelete = async (id: number) => {
+  const handleOnDeletePost = async (id: number) => {
     const { error } = await supabase.from('posts').delete().eq('id', id)
     if (error) {
       alert(error.message)
@@ -76,6 +76,16 @@ export default function PostDetail() {
     }
   }
 
+  const handleOnDeleteComment = async (id: number) => {
+    const { error } = await supabase.from('comments').delete().eq('id', id)
+    if (error) {
+      alert(error.message)
+    } else {
+      alert('댓글 삭제 성공!')
+      fetchComments()
+    }
+  }
+
   return (
     <>
       <div>{id}번 게시글 상세</div>
@@ -89,18 +99,24 @@ export default function PostDetail() {
           placeholder="댓글 입력"
           onChange={(e) => setComment(e.target.value)}
         />
-        <button className="p-2 rounded border-2 border-gray-200">
-          댓글 작성
-        </button>
+        <button className="p-2 rounded border-1">댓글 작성</button>
       </form>
       <ul>
         {comments?.map((comment) => (
-          <li key={comment.id}>- {comment.content}</li>
+          <li key={comment.id}>
+            - {comment.content}
+            <button
+              className="p-1 rounded border-1"
+              onClick={() => handleOnDeleteComment(comment.id)}
+            >
+              X
+            </button>
+          </li>
         ))}
       </ul>
       <button
-        className="p-2 rounded border-2 border-gray-200"
-        onClick={() => handleOnDelete(post.id)}
+        className="p-2 rounded border-1 hover:bg-gray-200"
+        onClick={() => handleOnDeletePost(post.id)}
       >
         삭제
       </button>
